@@ -113,7 +113,7 @@ def save_images(visuals, image_path, image_dir):
     """
     short_path = os.path.basename(image_path[0])
     name = os.path.splitext(short_path)[0]
-    mkdirs(image_path)
+    mkdirs(image_dir)
     for label, im_data in visuals.items():
         im = tensor2im(im_data)
         image_name = '%s_%s.png' % (name, label)
