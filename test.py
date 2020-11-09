@@ -55,6 +55,4 @@ if __name__ == '__main__':
         model.test()           # run inference
         visuals = model.get_current_visuals()  # get image results
         img_path = model.get_image_paths()     # get image paths
-        print(img_dir)
-        print(img_path)
-        save_images(visuals, img_path, img_dir)
+        save_images(visuals, img_path, img_dir, opt.unpaired)

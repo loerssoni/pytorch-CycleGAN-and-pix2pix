@@ -102,7 +102,7 @@ def mkdir(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def save_images(visuals, image_path, image_dir):
+def save_images(visuals, image_path, image_dir, unpaired=0):
     """Save images to the disk.
 
     Parameters:
@@ -115,6 +115,8 @@ def save_images(visuals, image_path, image_dir):
     name = os.path.splitext(short_path)[0]
     mkdirs(image_dir)
     for label, im_data in visuals.items():
+        if unpaired != 0 and 'fake' not in label:
+            pass
         im = tensor2im(im_data)
         image_name = '%s_%s.png' % (name, label)
         save_path = os.path.join(image_dir, image_name)
