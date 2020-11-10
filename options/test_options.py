@@ -13,11 +13,13 @@ class TestOptions(BaseOptions):
         parser.add_argument('--aspect_ratio', type=float, default=1.0, help='aspect ratio of result images')
         parser.add_argument('--phase', type=str, default='test', help='train, val, test, etc')
         parser.add_argument('--unpaired', type=int, default=1, help='unpaired')
+        parser.add_argument('--noise', type=int, default=0, help='add noise to test images')
         # Dropout and Batchnorm has different behavioir during training and test.
         parser.add_argument('--eval', action='store_true', help='use eval mode during test time.')
         parser.add_argument('--num_test', type=int, default=50, help='how many test images to run')
         # rewrite devalue values
         parser.set_defaults(model='test')
+        parser.set_defaults(preprocess='resize_crop')
         # To avoid cropping, the load_size should be the same as crop_size
         parser.set_defaults(load_size=parser.get_default('crop_size'))
         self.isTrain = False

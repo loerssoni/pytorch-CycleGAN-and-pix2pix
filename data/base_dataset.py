@@ -85,8 +85,6 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
     if 'resize' in opt.preprocess:
         osize = [opt.load_size, opt.load_size]
         transform_list.append(transforms.Resize(osize, method))
-    elif 'scale_width' in opt.preprocess:
-        transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size, opt.crop_size, method)))
 
     if 'crop' in opt.preprocess:
         if params is None:
@@ -96,19 +94,17 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
 
     if opt.preprocess == 'none':
         transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base=4, method=method)))
+    transform_list.append(transforms.ToTensor())
+    if 'noise' in opt.preprocess:
 
-    if not opt.no_flip:
-        if params is None:
-            transform_list.append(transforms.RandomHorizontalFlip())
-        elif params['flip']:
-            transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
-
-    if convert:
-        transform_list += [transforms.ToTensor()]
-        if grayscale:
-            transform_list += [transforms.Normalize((0.5,), (0.5,))]
-        else:
-            transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+        transform_list.append(transforms.ColorJitter(brightness=(0, 0.5), contrast=(0, 0.5),
+                                                     saturation=(0, 0.5), hue=(0, 0.5)))
+        transform_list += [transforms.RandomErasing(p=0.5, scale=(0.01, 0.05), ratio=(0.3, 3.3),
+                                                       value=None, inplace=False)]*5
+    if grayscale:
+        transform_list += [transforms.Normalize((0.5,), (0.5,))]
+    else:
+        transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
 

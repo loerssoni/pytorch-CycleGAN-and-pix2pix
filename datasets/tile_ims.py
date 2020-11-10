@@ -5,8 +5,8 @@ def tile_im(im, name='1'):
     imgwidth = im.shape[0]
     imgheight = im.shape[1]
     y1 = 0
-    M = 512
-    N = 512
+    M = 128
+    N = 128
 
     for x in range(0,imgwidth,M):
         for y in range(0, imgheight, N):
@@ -19,3 +19,6 @@ def tile_im(im, name='1'):
             zeros = np.concatenate([zeros, zeros2], 1)
             cv2.rectangle(im, (x, y), (x1, y1), (0, 255, 0))
             cv2.imwrite(f"save/{name}{str(x)}_{str(y)}.png", zeros)
+
+def untile_im(name):
+   pass

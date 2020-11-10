@@ -104,11 +104,6 @@ class BaseModel(ABC):
         """
         with torch.no_grad():
             self.forward()
-            self.compute_visuals()
-
-    def compute_visuals(self):
-        """Calculate additional output images for visdom and HTML visualization"""
-        pass
 
     def get_image_paths(self):
         """ Return image paths that are used to load current data"""
