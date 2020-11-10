@@ -168,8 +168,6 @@ def coarse_dropout(image, count=200, max_size=0.05):
         two = torch.rand([3, yb - ya, xb - xa]) * 1
         three = image[:, ya:yb, xb:dim]
         middle = torch.cat([one, two, three], axis=2)
-        print(middle.shape)
-        print(image.shape)
         image = torch.cat([image[:, 0:ya, :], middle, image[:, yb:dim, :]], axis=1)
     image = torch.reshape(image, [3, dim, dim])
     return image
