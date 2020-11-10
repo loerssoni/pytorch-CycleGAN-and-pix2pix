@@ -69,6 +69,7 @@ class Pix2PixModel(BaseModel):
             self.optimizer_D = torch.optim.Adam(self.netD.parameters(), lr=opt.lr, betas=(opt.beta1, 0.999))
             self.optimizers.append(self.optimizer_G)
             self.optimizers.append(self.optimizer_D)
+        
 
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.

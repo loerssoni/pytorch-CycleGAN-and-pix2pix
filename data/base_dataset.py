@@ -78,7 +78,7 @@ def get_params(opt, size):
     return {'crop_pos': (x, y), 'flip': flip}
 
 
-def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, convert=True):
+def get_transform(opt, params=None, noise=False, grayscale=False, method=Image.BICUBIC):
     transform_list = []
     if grayscale:
         transform_list.append(transforms.Grayscale(1))
@@ -95,8 +95,7 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
     if opt.preprocess == 'none':
         transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base=4, method=method)))
     transform_list.append(transforms.ToTensor())
-    if 'noise' in opt.preprocess:
-
+    if noise:
         transform_list.append(transforms.ColorJitter(brightness=(0, 0.5), contrast=(0, 0.5),
                                                      saturation=(0, 0.5), hue=(0, 0.5)))
         transform_list += [transforms.RandomErasing(p=0.5, scale=(0.01, 0.05), ratio=(0.3, 3.3),
