@@ -5,6 +5,7 @@ It also includes common transformation functions (e.g., get_transform, __scale_w
 import random
 import numpy as np
 import torch.utils.data as data
+import torch
 from PIL import Image
 import torchvision.transforms as transforms
 from abc import ABC, abstractmethod
@@ -96,10 +97,11 @@ def get_transform(opt, params=None, noise=False, grayscale=False, method=Image.B
         transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base=4, method=method)))
     transform_list.append(transforms.ToTensor())
     if noise:
-        transform_list.append(transforms.ColorJitter(brightness=(0, 0.5), contrast=(0, 0.5),
-                                                     saturation=(0, 0.5), hue=(0, 0.5)))
-        transform_list += [transforms.RandomErasing(p=0.5, scale=(0.01, 0.05), ratio=(0.3, 3.3),
-                                                       value='random', inplace=False)]*5
+        transform_list.append(transforms.ColorJitter(brightness=(0.8, 1.2), contrast=(0.8, 1.2),
+                                                     saturation=(0.8, 1.2), hue=(-0.05, 0.05)))
+        transform_list.append(transforms.Lambda(lambda x: coarse_dropout(x)))
+        transform_list.append(transforms.Lambda(lambda x: x + torch.rand(x.shape)*0.05))
+
     if grayscale:
         transform_list += [transforms.Normalize((0.5,), (0.5,))]
     else:
@@ -150,3 +152,24 @@ def __print_size_warning(ow, oh, w, h):
               "(%d, %d). This adjustment will be done to all images "
               "whose sizes are not multiples of 4" % (ow, oh, w, h))
         __print_size_warning.has_printed = True
+
+
+def coarse_dropout(image, count=200, max_size=0.05):
+    dim = image.shape[1]
+    for k in range(count):
+        x = (torch.rand(1) * image.shape[1]).int()
+        y = (torch.rand(1) * image.shape[2]).int()
+        height = (dim* max_size * torch.rand(1))
+        ya = torch.max(torch.tensor(0), y - height // 2).int()
+        yb = torch.min(torch.tensor(dim), y + height // 2).int()
+        xa = torch.max(torch.tensor(0), x - height // 2).int()
+        xb = torch.min(torch.tensor(dim), x + height // 2).int()
+        one = image[:, ya:yb, 0:xa]
+        two = torch.rand([3, yb - ya, xb - xa]) * 1
+        three = image[:, ya:yb, xb:dim]
+        middle = torch.cat([one, two, three], axis=2)
+        print(middle.shape)
+        print(image.shape)
+        image = torch.cat([image[:, 0:ya, :], middle, image[:, yb:dim, :]], axis=1)
+    image = torch.reshape(image, [3, dim, dim])
+    return image
