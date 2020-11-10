@@ -99,7 +99,7 @@ def get_transform(opt, params=None, noise=False, grayscale=False, method=Image.B
         transform_list.append(transforms.ColorJitter(brightness=(0, 0.5), contrast=(0, 0.5),
                                                      saturation=(0, 0.5), hue=(0, 0.5)))
         transform_list += [transforms.RandomErasing(p=0.5, scale=(0.01, 0.05), ratio=(0.3, 3.3),
-                                                       value=None, inplace=False)]*5
+                                                       value='random', inplace=False)]*5
     if grayscale:
         transform_list += [transforms.Normalize((0.5,), (0.5,))]
     else:
