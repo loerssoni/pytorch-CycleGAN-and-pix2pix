@@ -18,7 +18,4 @@ def tile_im(im, name='1'):
             zeros[:tiles.shape[0], :tiles.shape[1], :] = tiles
             zeros = np.concatenate([zeros, zeros2], 1)
             cv2.rectangle(im, (x, y), (x1, y1), (0, 255, 0))
-            cv2.imwrite(f"save/{name}{str(x)}_{str(y)}.png", zeros)
-
-def untile_im(name):
-   pass
+            cv2.imwrite(f"save/{name}_{str(x)}_{str(y)}.png", zeros)

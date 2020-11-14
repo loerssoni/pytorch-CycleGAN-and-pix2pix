@@ -46,13 +46,6 @@ if __name__ == '__main__':
     # test with eval mode. This only affects layers like batchnorm and dropout.
     # For [pix2pix]: we use batchnorm and dropout in the original pix2pix. You can experiment it with and without eval() mode.
     img_dir = os.path.join(opt.results_dir, opt.name, '{}_{}'.format(opt.phase, opt.epoch))
-    import cv2
-    for i in range(10):
-        it = dataset.dataset.__getitem__(i)['A']
-        window_name = 'image'
-        cv2.imshow(window_name, it.permute(1, 2, 0).numpy())
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
     if opt.eval:
         model.eval()
     for i, data in enumerate(dataset):

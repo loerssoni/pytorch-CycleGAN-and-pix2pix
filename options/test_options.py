@@ -15,7 +15,7 @@ class TestOptions(BaseOptions):
         parser.add_argument('--noise', type=int, default=0, help='add noise to test images')
         # Dropout and Batchnorm has different behavioir during training and test.
         parser.add_argument('--eval', action='store_true', help='use eval mode during test time.')
-        parser.add_argument('--num_test', type=int, default=50, help='how many test images to run')
+        parser.add_argument('--num_test', type=int, default=1000, help='how many test images to run')
         # rewrite devalue values
         parser.set_defaults(preprocess='resize_crop')
         # To avoid cropping, the load_size should be the same as crop_size
